@@ -14,8 +14,8 @@ const StudentLayout = () => {
         <Topbar setIsMobileOpen={setIsMobileOpen} />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-[#f8fafc] p-4 lg:p-8 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
-          <div className="max-w-7xl mx-auto min-h-full pb-8">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-[#f8fafc] scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+          <div className="px-6 lg:px-10 py-8 mx-auto w-full max-w-full min-h-full">
             <Outlet />
           </div>
         </main>
