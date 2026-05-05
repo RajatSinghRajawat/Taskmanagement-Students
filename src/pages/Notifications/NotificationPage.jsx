@@ -1,114 +1,193 @@
-import React from 'react';
-import { Bell, CheckCircle2, AlertCircle, FileText, Calendar, Check, MoreVertical } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Bell, 
+  CheckCircle2, 
+  FileText, 
+  Megaphone, 
+  Trash2, 
+  Clock, 
+  RefreshCcw, 
+  ShieldAlert,
+  GraduationCap,
+  ArrowRight
+} from 'lucide-react';
+
+const API = 'http://localhost:7001/api/notifications';
 
 const NotificationPage = () => {
-  const notifications = [
-    {
-      id: 1,
-      type: 'alert',
-      title: 'Task Due Soon',
-      message: 'Your Mathematics Chapter 5 Exercise is due in 2 hours.',
-      time: '1 hour ago',
-      read: false,
-      icon: AlertCircle,
-      iconColor: 'text-amber-500',
-      bg: 'bg-amber-50'
-    },
-    {
-      id: 2,
-      type: 'assignment',
-      title: 'New Assignment Posted',
-      message: 'Mr. Davis posted a new task: Science Project: Solar System.',
-      time: '3 hours ago',
-      read: false,
-      icon: FileText,
-      iconColor: 'text-blue-500',
-      bg: 'bg-blue-50'
-    },
-    {
-      id: 3,
-      type: 'grade',
-      title: 'Task Graded',
-      message: 'Mrs. Smith graded your History Essay. You scored 95/100.',
-      time: '1 day ago',
-      read: true,
-      icon: CheckCircle2,
-      iconColor: 'text-emerald-500',
-      bg: 'bg-emerald-50'
-    },
-    {
-      id: 4,
-      type: 'event',
-      title: 'Upcoming Quiz Reminder',
-      message: 'Don\'t forget your Biology Quiz tomorrow at 10:00 AM.',
-      time: '1 day ago',
-      read: true,
-      icon: Calendar,
-      iconColor: 'text-indigo-500',
-      bg: 'bg-indigo-50'
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchNotifications = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
+    else setRefreshing(true);
+    
+    const token = localStorage.getItem('studentToken');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API}/my-notifications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setNotifications(data.data || []);
+      }
+    } catch (err) {
+      toast.error('Sync failure detected');
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
-  ];
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
+  const markAllAsRead = async () => {
+    const token = localStorage.getItem('studentToken');
+    try {
+      await fetch(`${API}/mark-read`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('System clear. All read.');
+      fetchNotifications(true);
+    } catch (err) {
+      toast.error('Command failed');
+    }
+  };
+
+  const deleteNotification = (id) => {
+     setNotifications(prev => prev.filter(n => n._id !== id));
+     toast.success('Notification purged');
+  };
+
+  const getIcon = (type) => {
+    switch (type) {
+      case 'Task_Assigned': return { icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' };
+      case 'Report_Published': return { icon: GraduationCap, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' };
+      case 'Task_Overdue': return { icon: ShieldAlert, color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' };
+      case 'Announcement': return { icon: Megaphone, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' };
+      default: return { icon: Bell, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' };
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-8 space-y-6 animate-pulse bg-slate-50 min-h-screen">
+        <div className="h-12 bg-slate-200 w-1/4 rounded-2xl" />
+        <div className="space-y-6">
+          {[...Array(6)].map((_, i) => <div key={i} className="h-28 bg-white rounded-[32px] shadow-sm" />)}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 p-4 sm:p-8 bg-slate-50 min-h-full">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-            <Bell className="w-6 h-6 text-blue-500" />
-            Notifications
-          </h1>
-          <p className="text-slate-500 mt-1">Stay updated with your latest alerts and messages</p>
-        </div>
-        <button className="flex items-center gap-2 text-sm font-medium text-blue-600 bg-blue-50 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors">
-          <Check className="w-4 h-4" />
-          Mark all as read
-        </button>
+    <div className="relative w-full space-y-10 animate-in fade-in duration-700 pb-20 overflow-hidden bg-[#F8FAFC]">
+      <Toaster position="top-right" />
+
+      {/* Decorative Blobs */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 -left-24 w-72 h-72 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
+
+      {/* Simplified Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10 max-w-5xl mx-auto">
+         <div>
+            <h1 className="text-4xl font-black text-slate-800 tracking-tight font-display mb-1">Notifications</h1>
+            <p className="text-slate-400 font-bold text-[10px] tracking-[0.15em] uppercase flex items-center gap-2">
+               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+               Live Command Center Feed
+            </p>
+         </div>
+         <div className="flex items-center gap-3">
+            <button onClick={() => fetchNotifications(true)} className={`p-4 bg-white/80 backdrop-blur-md rounded-2xl text-slate-400 hover:text-indigo-600 transition-all border border-slate-100 shadow-sm ${refreshing ? 'animate-spin' : ''}`}>
+               <RefreshCcw size={22} />
+            </button>
+            <button 
+               onClick={markAllAsRead}
+               disabled={notifications.length === 0}
+               className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-slate-100 flex items-center gap-3 hover:bg-indigo-600 transition-all disabled:opacity-50"
+            >
+               <CheckCircle2 size={22} /> Mark all as read
+            </button>
+         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 divide-y divide-slate-100">
-        {notifications.map((notification) => (
-          <div 
-            key={notification.id} 
-            className={`p-4 sm:p-6 flex items-start gap-4 transition-colors hover:bg-slate-50 group ${
-              !notification.read ? 'bg-blue-50/30' : ''
-            }`}
-          >
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${notification.bg}`}>
-              <notification.icon className={`w-6 h-6 ${notification.iconColor}`} />
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between gap-2">
-                <h3 className={`font-semibold truncate ${!notification.read ? 'text-slate-900' : 'text-slate-800'}`}>
-                  {notification.title}
-                </h3>
-                <span className="text-xs text-slate-400 whitespace-nowrap shrink-0 mt-1">
-                  {notification.time}
-                </span>
-              </div>
-              <p className={`text-sm mt-1 line-clamp-2 ${!notification.read ? 'text-slate-700 font-medium' : 'text-slate-500'}`}>
-                {notification.message}
-              </p>
-              
-              {!notification.read && (
-                <div className="mt-3">
-                  <button className="text-sm text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-                    View Details
-                  </button>
-                </div>
-              )}
-            </div>
+      {/* Clean Notifications List */}
+      <div className="max-w-5xl mx-auto space-y-6 relative z-10">
+         <AnimatePresence mode="popLayout">
+            {notifications.length > 0 ? notifications.map((n, idx) => {
+               const { icon: Icon, color, bg, border } = getIcon(n.type);
+               return (
+                  <motion.div 
+                     key={n._id}
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     exit={{ opacity: 0, scale: 0.95 }}
+                     transition={{ delay: idx * 0.03 }}
+                     className={`relative bg-white/80 backdrop-blur-2xl p-8 rounded-[40px] border border-white shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex flex-col md:flex-row items-start md:items-center gap-8 transition-all hover:shadow-xl hover:border-indigo-100 group ${!n.isRead ? 'border-l-[6px] border-l-indigo-600' : ''}`}
+                  >
+                     {/* Icon */}
+                     <div className={`w-16 h-16 rounded-[24px] ${bg} ${color} flex items-center justify-center text-3xl shadow-inner border ${border} shrink-0`}>
+                        <Icon size={28} />
+                     </div>
 
-            <div className="shrink-0 flex items-center gap-2">
-              {!notification.read && (
-                <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
-              )}
-              <button className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
-                <MoreVertical className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        ))}
+                     {/* Content */}
+                     <div className="flex-1 space-y-2">
+                        <div className="flex items-start justify-between gap-4">
+                           <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                 <span className={`px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest ${bg} ${color} border ${border}`}>{n.type?.replace(/_/g, ' ')}</span>
+                                 {!n.isRead && <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(79,70,229,0.5)]"></span>}
+                              </div>
+                              <h3 className={`text-lg font-black tracking-tight font-display ${!n.isRead ? 'text-slate-900' : 'text-slate-600'}`}>
+                                 {n.title}
+                              </h3>
+                           </div>
+                           <div className="text-right shrink-0">
+                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 justify-end">
+                                 <Clock size={12} /> {new Date(n.createdAt).toLocaleDateString()}
+                              </p>
+                           </div>
+                        </div>
+                        
+                        <p className={`text-sm leading-relaxed ${!n.isRead ? 'text-slate-600 font-bold' : 'text-slate-500 font-medium'}`}>
+                           {n.message}
+                        </p>
+
+                        <div className="flex items-center gap-4 pt-2">
+                           <button className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-600 hover:gap-3 transition-all flex items-center gap-1">
+                              View Details <ArrowRight size={12} />
+                           </button>
+                           <span className="w-1 h-1 rounded-full bg-slate-100"></span>
+                           <button onClick={() => deleteNotification(n._id)} className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-rose-500 transition-colors">
+                              Dismiss
+                           </button>
+                        </div>
+                     </div>
+
+                     {/* Trash Action */}
+                     <button onClick={() => deleteNotification(n._id)} className="absolute right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all hidden lg:block p-3 text-slate-300 hover:text-rose-600">
+                        <Trash2 size={20} />
+                     </button>
+                  </motion.div>
+               );
+            }) : (
+               <div className="py-40 text-center bg-white/80 backdrop-blur-xl rounded-[64px] border border-white shadow-sm relative overflow-hidden">
+                  <div className="w-20 h-20 bg-slate-50 rounded-[32px] flex items-center justify-center mx-auto mb-6 text-slate-200">
+                     <Bell size={40} />
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-800 tracking-tight font-display">No Notifications</h3>
+                  <p className="text-slate-400 font-bold text-xs mt-2 tracking-wide uppercase">Your command center feed is currently empty.</p>
+               </div>
+            )}
+         </AnimatePresence>
       </div>
     </div>
   );
