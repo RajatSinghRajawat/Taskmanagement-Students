@@ -71,7 +71,8 @@ const NotificationPage = () => {
     switch (type) {
       case 'Task_Assigned': return { icon: FileText, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100' };
       case 'Report_Published': return { icon: GraduationCap, color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100' };
-      case 'Task_Overdue': return { icon: ShieldAlert, color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' };
+      case 'Task_Overdue': 
+      case 'Missed_Deadline': return { icon: ShieldAlert, color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' };
       case 'Announcement': return { icon: Megaphone, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' };
       default: return { icon: Bell, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' };
     }

@@ -66,11 +66,11 @@ const Sidebar = ({ isMobileOpen, setIsMobileOpen }) => {
 
   const menuItems = [
     { name: "Dashboard", path: "/", icon: <MdSpaceDashboard size={22} /> },
-    { name: "Task Wall", path: "/tasks", icon: <MdTaskAlt size={22} /> },
-    { name: "Materials", path: "/materials", icon: <MdOutlineFolderZip size={22} /> },
-    { name: "Performance", path: "/report", icon: <MdInsertChartOutlined size={22} /> },
+    { name: "My Assignments", path: "/tasks", icon: <MdTaskAlt size={22} /> },
+    { name: "Learning Hub", path: "/materials", icon: <MdOutlineFolderZip size={22} /> },
+    { name: "My Progress", path: "/report", icon: <MdInsertChartOutlined size={22} /> },
     { name: "Notifications", path: "/notifications", icon: <MdNotificationsNone size={22} /> },
-    { name: "My Profile", path: "/profile", icon: <MdOutlinePersonOutline size={22} /> },
+    { name: "Profile Settings", path: "/profile", icon: <MdOutlinePersonOutline size={22} /> },
   ];
 
   const sidebarVariants = {

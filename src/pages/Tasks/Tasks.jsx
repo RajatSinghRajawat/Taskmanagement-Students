@@ -77,10 +77,10 @@ const Tasks = () => {
    }), [tasks, search, filters]);
 
    const stats = useMemo(() => [
-      { label: 'Assigned Tasks', val: filteredTasks.length, color: 'text-indigo-600', bg: 'bg-indigo-50', icon: <MdListAlt size={26} /> },
-      { label: 'Pending Missions', val: filteredTasks.filter(t => t.Status !== 'Completed').length, color: 'text-purple-600', bg: 'bg-purple-50', icon: <MdPendingActions size={26} /> },
-      { label: 'Success Deployments', val: filteredTasks.filter(t => t.Status === 'Completed').length, color: 'text-emerald-600', bg: 'bg-emerald-50', icon: <MdCheckCircleOutline size={26} /> },
-      { label: 'Critical Alerts', val: filteredTasks.filter(t => new Date(t.Deadline) < new Date() && t.Status !== 'Completed').length, color: 'text-rose-600', bg: 'bg-rose-50', icon: <MdErrorOutline size={26} /> },
+      { label: 'Total Assignments', val: filteredTasks.length, color: 'text-indigo-600', bg: 'bg-indigo-50', icon: <MdListAlt size={26} /> },
+      { label: 'Pending Tasks', val: filteredTasks.filter(t => t.Status !== 'Completed').length, color: 'text-purple-600', bg: 'bg-purple-50', icon: <MdPendingActions size={26} /> },
+      { label: 'Completed', val: filteredTasks.filter(t => t.Status === 'Completed').length, color: 'text-emerald-600', bg: 'bg-emerald-50', icon: <MdCheckCircleOutline size={26} /> },
+      { label: 'Overdue', val: filteredTasks.filter(t => new Date(t.Deadline) < new Date() && t.Status !== 'Completed').length, color: 'text-rose-600', bg: 'bg-rose-50', icon: <MdErrorOutline size={26} /> },
    ], [filteredTasks]);
 
    const handleViewTask = async (task) => {
@@ -174,10 +174,10 @@ const Tasks = () => {
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
                <div>
-                  <h1 className="text-4xl font-black text-slate-800 tracking-tight font-display mb-1">Learning Task Wall</h1>
+                  <h1 className="text-4xl font-black text-slate-800 tracking-tight font-display mb-1">Course Assignments</h1>
                   <p className="text-slate-400 font-bold text-[10px] tracking-[0.15em] uppercase flex items-center gap-2">
                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                     Live Academic Mission Deployment Management
+                     Live Task & Assignment Tracking
                   </p>
                </div>
                <div className="flex items-center gap-3 bg-white/50 backdrop-blur-xl p-2 rounded-3xl border border-white shadow-sm">
@@ -185,7 +185,7 @@ const Tasks = () => {
                      <MdRefresh size={22} />
                   </button>
                   <div className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-slate-100 flex items-center gap-3">
-                     <MdAssignment size={22} /> Sector Active
+                     <MdAssignment size={22} /> Portal Active
                   </div>
                </div>
             </div>
@@ -262,7 +262,7 @@ const Tasks = () => {
         {/* Back Button */}
         <button onClick={handleBackToList} className="group flex items-center gap-3 px-6 py-3 bg-white/80 backdrop-blur-md border border-slate-100 rounded-[24px] text-slate-500 hover:text-indigo-600 transition-all shadow-sm">
            <MdArrowBack size={20} className="group-hover:-translate-x-1 transition-transform" />
-           <span className="text-[11px] font-black uppercase tracking-widest">Back to Mission Hub</span>
+           <span className="text-[11px] font-black uppercase tracking-widest">Back to Assignment Hub</span>
         </button>
 
         <div className="flex flex-col xl:flex-row gap-10 items-start">
@@ -305,7 +305,7 @@ const Tasks = () => {
               <div className="bg-white/80 backdrop-blur-2xl p-10 lg:p-14 rounded-[48px] border border-slate-200/50 shadow-sm">
                  <div className="flex items-center gap-4 mb-10">
                     <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner"><MdOutlineDescription /></div>
-                    <h2 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">Intelligence Briefing</h2>
+                    <h2 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">Task Instructions</h2>
                  </div>
                  <div className="prose prose-slate max-w-none text-slate-500 font-medium leading-[2] text-lg whitespace-pre-wrap">
                     {selectedTask.Description}
@@ -320,7 +320,7 @@ const Tasks = () => {
                     <div className="flex items-center justify-between">
                        <div className="flex items-center gap-4">
                           <div className="w-12 h-12 bg-white/10 text-white rounded-2xl flex items-center justify-center text-2xl backdrop-blur-xl border border-white/20"><MdInsertDriveFile /></div>
-                          <h2 className="text-2xl font-black text-white font-display uppercase tracking-tight">Operational Assets</h2>
+                          <h2 className="text-2xl font-black text-white font-display uppercase tracking-tight">Resources</h2>
                        </div>
                     </div>
 
@@ -358,8 +358,8 @@ const Tasks = () => {
                           <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-4xl shadow-inner border border-indigo-100"><MdExplore /></div>
                        )}
                        <div>
-                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Operational Status</p>
-                          <h3 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">{existingSubmission ? 'Mission Submitted' : 'Awaiting Deployment'}</h3>
+                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Submission Status</p>
+                          <h3 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">{existingSubmission ? 'Mission Submitted' : 'Awaiting Submission'}</h3>
                        </div>
                     </div>
 
@@ -370,7 +370,7 @@ const Tasks = () => {
                           </button>
                        ) : (
                           <button onClick={handleStartSubmit} className="w-full py-6 bg-indigo-600 text-white text-[12px] font-black uppercase tracking-[0.3em] rounded-[28px] shadow-2xl hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-3">
-                             INITIALIZE TASK <MdRocketLaunch size={24} />
+                             Submit Assignment <MdRocketLaunch size={24} />
                           </button>
                        )}
                        <p className="text-slate-400 text-[10px] font-bold leading-relaxed px-4">
@@ -384,7 +384,7 @@ const Tasks = () => {
               <div className="bg-white/80 backdrop-blur-2xl p-10 rounded-[48px] border border-slate-200/50 shadow-sm space-y-10">
                  <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner"><MdQuestionAnswer /></div>
-                    <h2 className="text-xl font-black text-slate-800 font-display uppercase tracking-tight">Intelligence Checks</h2>
+                    <h2 className="text-xl font-black text-slate-800 font-display uppercase tracking-tight">Quiz Questions</h2>
                  </div>
 
                  <div className="space-y-6">
@@ -439,7 +439,7 @@ const Tasks = () => {
                  <MdArrowBack size={24} />
                </button>
                <div>
-                 <h1 className="text-3xl font-black text-slate-800 tracking-tight font-display">{existingSubmission ? 'Intelligence Update' : 'Operational Deployment'}</h1>
+                 <h1 className="text-3xl font-black text-slate-800 tracking-tight font-display">{existingSubmission ? 'Intelligence Update' : 'Submit Assignment'}</h1>
                  <p className="text-slate-400 font-medium text-sm mt-1">Synchronizing intelligence for: <span className="text-indigo-600 font-bold">{selectedTask.Title}</span></p>
                </div>
              </div>
@@ -455,7 +455,7 @@ const Tasks = () => {
                      {existingSubmission ? <MdEditNote /> : <MdRocketLaunch />}
                    </div>
                    <div>
-                     <h2 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">{existingSubmission ? 'Update Mission' : 'Mission Submission'}</h2>
+                     <h2 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">{existingSubmission ? 'Update Mission' : 'Submit Assignment'}</h2>
                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                        Active Link Established
@@ -467,7 +467,7 @@ const Tasks = () => {
                    {selectedTask.questions?.length > 0 && (
                      <div className="space-y-6">
                        <h3 className="text-[11px] font-black text-indigo-600 uppercase tracking-[0.4em] pb-4 border-b border-slate-100 flex items-center gap-3">
-                          <MdQuestionAnswer size={18} /> Required Intel Response
+                          <MdQuestionAnswer size={18} /> Quiz Response Required
                        </h3>
                        
                        <div className="space-y-6">
@@ -505,7 +505,7 @@ const Tasks = () => {
 
                    <div className="space-y-6">
                      <h3 className="text-[11px] font-black text-indigo-600 uppercase tracking-[0.4em] pb-4 border-b border-slate-100 flex items-center gap-3">
-                        <MdCloudUpload size={18} /> Asset Synchronization
+                        <MdCloudUpload size={18} /> File Upload
                      </h3>
                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                        <div className="relative group cursor-pointer">
@@ -545,7 +545,7 @@ const Tasks = () => {
                        <MdInfoOutline size={18} /> {existingSubmission ? 'Updating will overwrite your previous submission.' : 'Verify all intel fields before final confirmation.'}
                      </div>
                      <button type="submit" disabled={isSubmitting} className={`w-full md:w-auto md:min-w-[300px] px-10 py-6 bg-slate-900 text-white text-[12px] font-black uppercase tracking-[0.3em] rounded-[28px] shadow-2xl hover:bg-indigo-600 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-4 ${isSubmitting ? 'opacity-50' : ''}`}>
-                        {isSubmitting ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <>{existingSubmission ? 'CONFIRM UPDATE' : 'CONFIRM DEPLOYMENT'} <MdArrowForward size={20} /></>}
+                        {isSubmitting ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <>{existingSubmission ? 'CONFIRM UPDATE' : 'SUBMIT ASSIGNMENT'} <MdArrowForward size={20} /></>}
                      </button>
                    </div>
                  </form>

@@ -84,7 +84,7 @@ const Dashboard = () => {
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
       <div className="w-14 h-14 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Synchronizing Academic Intel...</p>
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Loading Portal Data...</p>
     </div>
   );
 
@@ -102,13 +102,13 @@ const Dashboard = () => {
       desc: 'Active learning track'
     },
     { 
-      label: 'Pending Missions', 
+      label: 'Pending Tasks', 
       val: pendingCount, 
       icon: <MdAssignment size={26} />, 
       color: 'text-amber-600', 
       bg: 'bg-amber-50',
       path: '/tasks',
-      desc: 'Tasks awaiting deployment'
+      desc: 'Tasks to be completed'
     },
     { 
       label: 'Completed Tasks', 
@@ -117,7 +117,7 @@ const Dashboard = () => {
       color: 'text-emerald-600', 
       bg: 'bg-emerald-50',
       path: '/tasks',
-      desc: 'Successfully archived'
+      desc: 'Successfully completed'
     },
     { 
       label: 'Learning Streak', 
@@ -141,7 +141,7 @@ const Dashboard = () => {
           </h1>
           <p className="text-slate-400 font-bold text-xs tracking-[0.1em] uppercase flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Student Intelligence System • Connection Stable
+            Student Management System • Connection Active
           </p>
         </div>
         <div className="flex items-center gap-4 bg-white p-2 rounded-3xl border border-slate-100 shadow-sm">
@@ -201,13 +201,13 @@ const Dashboard = () => {
                     <h3 className="text-3xl font-black text-slate-800 font-display tracking-tight">Learning Hub</h3>
                  </div>
                  <p className="text-slate-400 text-sm font-bold max-w-md leading-relaxed">
-                    Access your active curriculum, track mission progress, and synchronize with your professors in real-time.
+                    Access your active course assignments, track progress, and communicate with your teachers.
                  </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
                  <button onClick={() => navigate('/tasks')} className="p-6 bg-indigo-600 text-white rounded-[28px] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 active:scale-95">
-                    <MdAssignment size={22} /> Resume Mission
+                    <MdAssignment size={22} /> View Assignments
                  </button>
                  <button onClick={() => navigate('/materials')} className="p-6 bg-white border border-slate-100 text-slate-600 rounded-[28px] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
                     <MdBook size={22} /> View Resources
@@ -222,7 +222,7 @@ const Dashboard = () => {
         {/* 🔔 LIVE INTEL FEED */}
         <div className="bg-white p-10 rounded-[56px] border border-slate-100 shadow-sm flex flex-col">
            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-black text-slate-800 font-display tracking-tight">Intelligence</h3>
+              <h3 className="text-xl font-black text-slate-800 font-display tracking-tight">Recent Notifications</h3>
               <button onClick={() => navigate('/notifications')} className="p-2.5 bg-slate-50 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-all">
                  <MdNotificationsActive size={20} />
               </button>
@@ -253,7 +253,7 @@ const Dashboard = () => {
            </div>
            
            <button onClick={() => navigate('/notifications')} className="w-full py-5 mt-6 bg-slate-50 text-slate-400 rounded-[24px] font-black text-[10px] uppercase tracking-widest hover:text-indigo-600 transition-all">
-              Launch Intel Stream
+              View All Notifications
            </button>
         </div>
       </div>
@@ -296,7 +296,7 @@ const Dashboard = () => {
             ))}
             {data.tasks.length === 0 && (
               <div className="col-span-full py-10 text-center text-slate-400 font-bold text-xs uppercase tracking-widest border-2 border-dashed border-slate-100 rounded-[32px]">
-                 No active assignments detected
+                 No assignments found
               </div>
             )}
          </div>

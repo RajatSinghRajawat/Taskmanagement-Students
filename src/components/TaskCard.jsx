@@ -36,8 +36,8 @@ const TaskCard = ({ task, onView }) => {
                <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border shadow-sm ${task.Priority?.toLowerCase() === 'high' ? 'bg-rose-50 text-rose-600 border-rose-100' : task.Priority?.toLowerCase() === 'medium' ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
                   {task.Priority || 'Medium'}
                </span>
-               <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border shadow-sm ${isCompleted ? 'bg-emerald-600 text-white border-emerald-600' : isOverdue ? 'bg-rose-600 text-white border-rose-600' : 'bg-slate-50 text-slate-500 border-slate-100'}`}>
-                  {isOverdue ? 'Overdue' : task.Status}
+               <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border shadow-sm ${isCompleted || task.Status === 'Late' ? 'bg-emerald-600 text-white border-emerald-600' : isOverdue ? 'bg-rose-600 text-white border-rose-600' : 'bg-slate-50 text-slate-500 border-slate-100'}`}>
+                  {isOverdue ? 'Missed' : task.Status}
                </span>
                {task.questions?.length > 0 && (
                  <span className="text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border border-indigo-100 bg-indigo-50 text-indigo-600 shadow-sm flex items-center gap-1.5">
