@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,7 +20,15 @@ import {
   UploadCloud,
   RefreshCcw,
   UserCheck,
-  ArrowRight
+  ArrowRight,
+  FileText as FileIcon,
+  Eye,
+  Trash2,
+  Zap,
+  Plus,
+  GraduationCap,
+  Globe,
+  Trophy
 } from 'lucide-react';
 
 const API_BASE = 'http://localhost:7001/api/students';
@@ -28,6 +37,7 @@ const ProfileView = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const navigate = useNavigate();
   
   const [student, setStudent] = useState(JSON.parse(localStorage.getItem('studentData') || '{}'));
   const [formData, setFormData] = useState({
@@ -39,13 +49,27 @@ const ProfileView = () => {
     batch: student.batch || ''
   });
 
+  const [resumeData, setResumeData] = useState({
+    summary: "",
+    experience: [],
+    projects: [],
+    skills: [],
+    education: { school: "", year: "" },
+    socials: { linkedin: "", github: "", portfolio: "" }
+  });
+
   const [passwords, setPasswords] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
 
+  const [activityData, setActivityData] = useState([]);
+  const [impactCount, setImpactCount] = useState(0);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+
   const fileInputRef = useRef(null);
+  const resumeInputRef = useRef(null);
 
   useEffect(() => {
      const fetchLatest = async () => {
@@ -64,7 +88,17 @@ const ProfileView = () => {
               course: res.data.courses,
               batch: res.data.batch
            });
+           if (res.data.resumeData) {
+              setResumeData(res.data.resumeData);
+           }
            localStorage.setItem('studentData', JSON.stringify(res.data));
+
+           // Fetch Activity Data
+           const activityRes = await axios.get(`http://localhost:7001/api/students/${res.data._id}/activity`, {
+              headers: { Authorization: `Bearer ${token}` }
+           });
+           setActivityData(activityRes.data);
+           setImpactCount(activityRes.data.filter(a => a.status === 'Completed' || a.status === 'Late').length);
         } catch (err) {
            console.error("Fetch profile error", err);
         }
@@ -108,13 +142,49 @@ const ProfileView = () => {
      }
   };
 
+  const handleResumeClick = () => {
+     if (isEditing) resumeInputRef.current?.click();
+     else toast.error("Please enter 'Edit Mode' to upload your academic resume.");
+  };
+
+  const handleResumeChange = async (e) => {
+     const file = e.target.files[0];
+     if (!file) return;
+     if (file.type !== 'application/pdf') {
+        return toast.error("Only PDF files are accepted for resumes.");
+     }
+
+     setLoading(true);
+     const token = localStorage.getItem('studentToken');
+     const uploadData = new FormData();
+     uploadData.append('resume', file);
+
+     try {
+        const res = await axios.put(`${API_BASE}/update-profile`, uploadData, {
+           headers: { 
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+           }
+        });
+        setStudent(res.data.user);
+        localStorage.setItem('studentData', JSON.stringify(res.data.user));
+        toast.success("Professional resume synchronized!");
+        window.dispatchEvent(new Event('storage'));
+     } catch (err) {
+        toast.error("Resume upload failed");
+     } finally {
+        setLoading(false);
+     }
+  };
+
   const handleSave = async () => {
     setLoading(true);
     const token = localStorage.getItem('studentToken');
     try {
       const res = await axios.put(`${API_BASE}/update-profile`, {
          mobile: formData.mobile,
-         location: formData.location
+         location: formData.location,
+         resumeData: resumeData
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -225,6 +295,7 @@ const ProfileView = () => {
                   </div>
                </div>
             </div>
+            
             <div className="bg-slate-900 p-10 rounded-[48px] shadow-2xl relative overflow-hidden group">
                <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -mr-20 -mt-20 blur-2xl" />
                <div className="relative z-10 space-y-8">
@@ -248,8 +319,139 @@ const ProfileView = () => {
                   </div>
                </div>
             </div>
+
+            {/* 📄 ACADEMIC RESUME CARD */}
+            <div className="bg-white/80 backdrop-blur-2xl p-10 rounded-[48px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group">
+               <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-inner">
+                     <FileIcon size={24} />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-800 font-display uppercase tracking-tight">Academic Resume</h3>
+               </div>
+               
+               <div className="space-y-6">
+                  {student.resume ? (
+                     <div className="p-6 bg-emerald-50/50 rounded-3xl border border-emerald-100 flex items-center justify-between group/res transition-all hover:bg-emerald-50">
+                        <div className="flex items-center gap-4">
+                           <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+                              <CheckCircle2 size={20} />
+                           </div>
+                           <div>
+                              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Document Status</p>
+                              <p className="text-xs font-black text-slate-700">Verified_Resume.pdf</p>
+                           </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <a 
+                              href={`http://localhost:7001/${student.resume}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="p-3 bg-white rounded-xl text-emerald-600 shadow-sm border border-emerald-100 hover:scale-110 transition-transform"
+                           >
+                              <Eye size={18} />
+                           </a>
+                        </div>
+                     </div>
+                  ) : (
+                     <div className="p-8 bg-slate-50 rounded-3xl border border-dashed border-slate-200 text-center">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">No Resume Found</p>
+                        <p className="text-[9px] font-bold text-slate-400 max-w-[180px] mx-auto uppercase">Upload your professional credentials to unlock job portals.</p>
+                     </div>
+                  )}
+
+                  <button 
+                     onClick={handleResumeClick}
+                     className={`w-full py-5 rounded-3xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${isEditing ? 'bg-indigo-600 text-white shadow-xl shadow-indigo-100 hover:bg-indigo-700' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+                  >
+                     <UploadCloud size={20} /> {student.resume ? 'Update Manual PDF' : 'Upload Academic Resume'}
+                  </button>
+                  <input type="file" ref={resumeInputRef} onChange={handleResumeChange} hidden accept=".pdf" />
+               </div>
+            </div>
+
+            {/* 🎯 TASK CONTRIBUTION ACTIVITY (MOVED TO SIDEBAR) */}
+            <div className="bg-white/80 backdrop-blur-2xl p-8 rounded-[48px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden group">
+               <div className="flex flex-col gap-4 mb-6">
+                  <div className="flex items-center gap-3">
+                     <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shadow-inner">
+                        <Zap size={20} className="text-amber-500" />
+                     </div>
+                     <h3 className="text-lg font-black text-slate-800 font-display uppercase tracking-tight">Mission Streak</h3>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-[4px] bg-emerald-500" /><span className="text-[8px] font-black text-slate-400 uppercase">On-Time</span></div>
+                     <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-[4px] bg-amber-500" /><span className="text-[8px] font-black text-slate-400 uppercase">Late</span></div>
+                     <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-[4px] bg-rose-500" /><span className="text-[8px] font-black text-slate-400 uppercase">Missed</span></div>
+                  </div>
+               </div>
+
+               <div className="flex items-start gap-2 overflow-x-auto pb-4 scrollbar-hide">
+                  <div className="grid grid-rows-7 gap-1.5 pt-1">
+                     {['S', 'M', 'B', 'J', 'S', 'S', 'A'].map(day => (
+                        <span key={day} className="text-[7px] font-black text-slate-300 uppercase h-4 flex items-center">{day}</span>
+                     ))}
+                  </div>
+                  <div className="flex gap-1.5">
+                     {Array.from({ length: 12 }).map((_, weekIndex) => (
+                        <div key={weekIndex} className="grid grid-rows-7 gap-1.5">
+                           {Array.from({ length: 7 }).map((_, dayIndex) => {
+                              const dayOffset = (weekIndex * 7) + dayIndex;
+                              const date = new Date();
+                              date.setDate(date.getDate() - (83 - dayOffset));
+                              const dateString = date.toISOString().split('T')[0];
+                              const activity = activityData.find(a => a.date === dateString);
+                              
+                              let colorClass = "bg-slate-50";
+                              if (activity) {
+                                 if (activity.status === "Completed") colorClass = "bg-emerald-500 shadow-lg shadow-emerald-100";
+                                 else if (activity.status === "Late") colorClass = "bg-amber-500 shadow-lg shadow-amber-100";
+                                 else if (activity.status === "Missed") colorClass = "bg-rose-500 shadow-lg shadow-rose-100";
+                              }
+
+                              return (
+                                 <div 
+                                    key={dayIndex} 
+                                    onClick={() => activity && setSelectedActivity(activity)}
+                                    className={`w-4 h-4 rounded-[4px] transition-all cursor-pointer hover:scale-125 ${colorClass}`}
+                                 ></div>
+                              );
+                           })}
+                        </div>
+                     ))}
+                  </div>
+               </div>
+
+               <div className="mt-4 pt-4 border-t border-slate-50">
+                  <div className="px-4 py-2.5 bg-slate-900 text-white rounded-2xl font-black text-[9px] uppercase tracking-widest flex items-center justify-between shadow-xl">
+                     <span className="flex items-center gap-2">Impact Index</span>
+                     <span>{impactCount} Missions</span>
+                  </div>
+               </div>
+
+               <AnimatePresence>
+                  {selectedActivity && (
+                     <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="absolute inset-0 bg-slate-900/95 backdrop-blur-md z-20 flex flex-col items-center justify-center p-8 text-center"
+                     >
+                        <button onClick={() => setSelectedActivity(null)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X size={20} /></button>
+                        <div className={`w-12 h-12 rounded-2xl mb-4 flex items-center justify-center ${selectedActivity.status === 'Completed' ? 'bg-emerald-500' : selectedActivity.status === 'Late' ? 'bg-amber-500' : 'bg-rose-500'} text-white shadow-xl shadow-slate-900/50`}>
+                           <CheckCircle2 size={24} />
+                        </div>
+                        <h4 className="text-white font-black text-sm uppercase tracking-tight mb-1">{selectedActivity.taskTitle}</h4>
+                        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-4">{selectedActivity.fullDate}</p>
+                        <div className={`px-4 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em] ${selectedActivity.status === 'Completed' ? 'bg-emerald-500/20 text-emerald-400' : selectedActivity.status === 'Late' ? 'bg-amber-500/20 text-amber-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                           {selectedActivity.status}
+                        </div>
+                     </motion.div>
+                  )}
+               </AnimatePresence>
+            </div>
          </div>
-         <div className="xl:col-span-8">
+
+         <div className="xl:col-span-8 space-y-10">
             <div className="bg-white/80 backdrop-blur-2xl p-10 lg:p-14 rounded-[56px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative">
                <div className="flex items-center justify-between mb-12 pb-8 border-b border-slate-100">
                   <div className="flex items-center gap-4">
@@ -294,6 +496,146 @@ const ProfileView = () => {
                   </div>
                </div>
             </div>
+
+            {/* 🚀 INTEGRATED RESUME BUILDER FORM */}
+            <div className="bg-white/80 backdrop-blur-2xl p-10 lg:p-14 rounded-[56px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+               <div className="flex items-center gap-4 mb-10 pb-6 border-b border-slate-100">
+                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-inner">
+                     <Zap size={24} className="text-amber-500" />
+                  </div>
+                  <h2 className="text-2xl font-black text-slate-800 font-display uppercase tracking-tight">Interactive Dossier</h2>
+               </div>
+
+               <div className="space-y-12">
+                  <div className="space-y-4">
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Professional Summary</label>
+                     <textarea 
+                        disabled={!isEditing}
+                        value={resumeData.summary}
+                        onChange={(e) => setResumeData({...resumeData, summary: e.target.value})}
+                        placeholder="Describe your professional journey..."
+                        className={`w-full px-8 py-6 rounded-[32px] text-sm font-medium transition-all min-h-[120px] resize-none ${isEditing ? 'bg-white border-2 border-indigo-100 focus:border-indigo-500 shadow-lg shadow-indigo-50 text-slate-800' : 'bg-slate-50 border border-slate-100 text-slate-500 cursor-not-allowed'}`}
+                     />
+                  </div>
+
+                  <div className="space-y-6">
+                     <div className="flex justify-between items-center">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Experience & Projects</label>
+                        {isEditing && (
+                           <button 
+                              onClick={() => setResumeData({...resumeData, experience: [...resumeData.experience, { title: "", company: "", duration: "", description: "" }]})}
+                              className="p-2 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-all"
+                           >
+                              <Plus size={18} />
+                           </button>
+                        )}
+                     </div>
+                     <div className="space-y-4">
+                        {resumeData.experience.map((exp, i) => (
+                           <div key={i} className="p-8 bg-slate-50/50 rounded-[40px] border border-slate-100 relative group">
+                              {isEditing && (
+                                 <button 
+                                    onClick={() => setResumeData({...resumeData, experience: resumeData.experience.filter((_, idx) => idx !== i)})}
+                                    className="absolute top-6 right-6 p-2 text-rose-500 opacity-0 group-hover:opacity-100 transition-all"
+                                 >
+                                    <Trash2 size={16} />
+                                 </button>
+                              )}
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                 <input disabled={!isEditing} placeholder="Title" value={exp.title} onChange={e => {
+                                    const next = [...resumeData.experience]; next[i].title = e.target.value; setResumeData({...resumeData, experience: next});
+                                 }} className={`w-full px-6 py-4 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border border-slate-200' : 'bg-transparent border-none p-0'}`} />
+                                 <input disabled={!isEditing} placeholder="Institution/Company" value={exp.company} onChange={e => {
+                                    const next = [...resumeData.experience]; next[i].company = e.target.value; setResumeData({...resumeData, experience: next});
+                                 }} className={`w-full px-6 py-4 rounded-2xl text-[10px] font-black text-indigo-600 uppercase tracking-widest text-right ${isEditing ? 'bg-white border border-slate-200' : 'bg-transparent border-none p-0'}`} />
+                                 <textarea disabled={!isEditing} placeholder="Description" value={exp.description} onChange={e => {
+                                    const next = [...resumeData.experience]; next[i].description = e.target.value; setResumeData({...resumeData, experience: next});
+                                 }} className={`md:col-span-2 w-full px-6 py-4 rounded-2xl text-sm font-medium min-h-[100px] resize-none ${isEditing ? 'bg-white border border-slate-200' : 'bg-transparent border-none p-0'}`} />
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  <div className="space-y-6">
+                     <div className="flex justify-between items-center">
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Core Skills</label>
+                        {isEditing && (
+                           <button 
+                              onClick={() => setResumeData({...resumeData, skills: [...resumeData.skills, ""]})}
+                              className="p-2 bg-slate-100 text-slate-400 rounded-lg hover:bg-slate-200 transition-all"
+                           >
+                              <Plus size={14} />
+                           </button>
+                        )}
+                     </div>
+                     <div className="flex flex-wrap gap-3">
+                        {resumeData.skills.map((skill, i) => (
+                           <div key={i} className="relative group">
+                              <input 
+                                 disabled={!isEditing}
+                                 value={skill}
+                                 onChange={e => {
+                                    const next = [...resumeData.skills]; next[i] = e.target.value; setResumeData({...resumeData, skills: next});
+                                 }}
+                                 className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isEditing ? 'bg-white border border-indigo-100 w-32' : 'bg-slate-100 text-slate-500 w-auto'}`}
+                              />
+                              {isEditing && (
+                                 <button onClick={() => setResumeData({...resumeData, skills: resumeData.skills.filter((_, idx) => idx !== i)})} className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 transition-all">
+                                    <X size={10} />
+                                 </button>
+                              )}
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  {/* Education */}
+                  <div className="space-y-8">
+                     <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
+                        <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shadow-inner">
+                           <GraduationCap size={24} />
+                        </div>
+                        <h2 className="text-xl font-black text-slate-800 font-display uppercase tracking-tight">Academic Foundation</h2>
+                     </div>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Principal Institution</label>
+                           <input disabled={!isEditing} value={resumeData.education.school} onChange={(e) => setResumeData({...resumeData, education: {...resumeData.education, school: e.target.value}})} className={`w-full px-8 py-5 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border-2 border-indigo-100' : 'bg-slate-50 border border-slate-100'}`} placeholder="University Name" />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Batch / Year</label>
+                           <input disabled={!isEditing} value={resumeData.education.year} onChange={(e) => setResumeData({...resumeData, education: {...resumeData.education, year: e.target.value}})} className={`w-full px-8 py-5 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border-2 border-indigo-100' : 'bg-slate-50 border border-slate-100'}`} placeholder="2020 - 2024" />
+                        </div>
+                     </div>
+                  </div>
+
+                  {/* Socials */}
+                  <div className="space-y-8">
+                     <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
+                        <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center shadow-inner">
+                           <Globe size={24} />
+                        </div>
+                        <h2 className="text-xl font-black text-slate-800 font-display uppercase tracking-tight">Global Presence</h2>
+                     </div>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">LinkedIn URL</label>
+                           <input disabled={!isEditing} value={resumeData.socials.linkedin} onChange={(e) => setResumeData({...resumeData, socials: {...resumeData.socials, linkedin: e.target.value}})} className={`w-full px-8 py-5 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border-2 border-indigo-100' : 'bg-slate-50 border border-slate-100'}`} placeholder="LinkedIn Link" />
+                        </div>
+                        <div className="space-y-3">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">GitHub URL</label>
+                           <input disabled={!isEditing} value={resumeData.socials.github} onChange={(e) => setResumeData({...resumeData, socials: {...resumeData.socials, github: e.target.value}})} className={`w-full px-8 py-5 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border-2 border-indigo-100' : 'bg-slate-50 border border-slate-100'}`} placeholder="GitHub Link" />
+                        </div>
+                        <div className="md:col-span-2 space-y-3">
+                           <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">Portfolio Website</label>
+                           <input disabled={!isEditing} value={resumeData.socials.portfolio} onChange={(e) => setResumeData({...resumeData, socials: {...resumeData.socials, portfolio: e.target.value}})} className={`w-full px-8 py-5 rounded-2xl text-sm font-bold ${isEditing ? 'bg-white border-2 border-indigo-100' : 'bg-slate-50 border border-slate-100'}`} placeholder="Your Portfolio URL" />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
          </div>
       </div>
 

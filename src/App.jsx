@@ -9,6 +9,7 @@ import Materials from './pages/Materials/Materials';
 import MyReport from './pages/Reports/MyReport';
 import NotificationPage from './pages/Notifications/NotificationPage';
 import ProfileView from './pages/Profile/ProfileView';
+import ResumeBuilder from './pages/Profile/ResumeBuilder';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="report" element={<MyReport />} />
           <Route path="notifications" element={<NotificationPage />} />
           <Route path="profile" element={<ProfileView />} />
+          <Route path="profile/resume-builder" element={<ResumeBuilder />} />
         </Route>
 
         {/* Fallback */}
