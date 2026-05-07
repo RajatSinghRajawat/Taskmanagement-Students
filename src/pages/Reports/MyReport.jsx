@@ -129,19 +129,25 @@ const MyReport = () => {
           @media print {
             body * { visibility: hidden; }
             #final-pdf-content, #final-pdf-content * { visibility: visible !important; }
-            #final-pdf-content { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
+            #final-pdf-content { 
+              position: absolute; 
+              left: 0; 
+              top: 0; 
+              width: 100% !important; 
+              margin: 0 !important; 
+              padding: 0 !important; 
+              display: block !important; 
+            }
           }
         `}
       </style>
 
       {/* 🖼️ THE MARKSHEET (BLUE & BLACK DESIGN) */}
-      <div id="final-pdf-content" style={{ padding: '40px', background: 'white', color: 'black', fontFamily: 'Arial, sans-serif' }}>
-        <div style={{ border: '12px double #1e3a8a', padding: '30px', minHeight: '900px' }}>
+      <div id="final-pdf-content" style={{ width: '800px', padding: '20px', background: 'white', color: 'black', fontFamily: 'Inter, Arial, sans-serif' }}>
+        <div style={{ border: '8px double #1e3a8a', padding: '40px', minHeight: '1050px', position: 'relative' }}>
           
-          <div style={{ textAlign: 'center', borderBottom: '4px solid #1e3a8a', paddingBottom: '20px', marginBottom: '30px' }}>
-            <div style={{ fontSize: '50px', fontWeight: '900', background: '#1e3a8a', color: 'white', width: '80px', height: '80px', lineHeight: '80px', display: 'inline-block', borderRadius: '15px' }}>T</div>
-            <h1 style={{ fontSize: '42px', margin: '10px 0', color: '#1e3a8a', fontWeight: '900' }}>TIPS-G ALWAR</h1>
-            <div style={{ fontSize: '12px', fontWeight: 'bold', letterSpacing: '2px', color: '#000' }}>OFFICIAL ACADEMIC RECORD | 2024-25</div>
+          <div style={{ textAlign: 'center', borderBottom: '4px solid #1e3a8a', paddingBottom: '30px', marginBottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <img src="/logo.png" alt="TIPS-G Logo" style={{ height: '140px', width: 'auto', display: 'block' }} />
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px', background: '#eff6ff', padding: '20px', borderRadius: '15px', border: '1px solid #bfdbfe' }}>
