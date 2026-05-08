@@ -7,7 +7,7 @@ const StudentLayout = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#f8fafc] font-sans overflow-hidden selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="flex h-screen bg-[#f8fafc] font-sans overflow-hidden selection:bg-blue-100 selection:text-blue-900">
       <Sidebar isMobileOpen={isMobileOpen} setIsMobileOpen={setIsMobileOpen} />
       
       <div className="flex-1 flex flex-col overflow-hidden relative w-full">

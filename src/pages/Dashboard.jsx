@@ -83,8 +83,8 @@ const Dashboard = () => {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-      <div className="w-14 h-14 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Loading Portal Data...</p>
+      <div className="w-14 h-14 border-4 border-blue-100 border-t-blue-700 rounded-full animate-spin"></div>
+      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Loading Portal Data...</p>
     </div>
   );
 
@@ -96,8 +96,8 @@ const Dashboard = () => {
       label: 'Academic Course',
       val: data.profile?.course || 'General',
       icon: <MdSchool size={26} />,
-      color: 'text-indigo-600',
-      bg: 'bg-indigo-50',
+      color: 'text-blue-700',
+      bg: 'bg-blue-50',
       path: '/profile',
       desc: 'Active learning track'
     },
@@ -123,189 +123,187 @@ const Dashboard = () => {
       label: 'Learning Streak',
       val: '94%',
       icon: <MdTimeline size={26} />,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
+      color: 'text-blue-900',
+      bg: 'bg-slate-100',
       path: '/report',
       desc: 'Performance consistency'
     },
   ];
 
   return (
-    <div className="w-full space-y-10 animate-in fade-in duration-700 pb-20">
+    <div className="w-full space-y-10 animate-in fade-in duration-700 pb-20 bg-slate-50 min-h-screen">
 
       {/* 🚀 ELITE HEADER */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 px-4 sm:px-8 pt-8">
         <div className="flex items-center gap-10">
-          <img src="/logo.png" alt="TIPS-G Logo" className="h-28 w-auto hidden sm:block border-r-4 border-indigo-600 pr-10" />
+          <div className="w-20 h-20 rounded-3xl bg-blue-700 text-white flex items-center justify-center shadow-lg hidden sm:flex">
+             <MdSchool size={40} />
+          </div>
           <div>
-            <h1 className="text-4xl font-black text-slate-800 tracking-tight font-display mb-1">
+            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
               {getGreeting()}
             </h1>
-            <p className="text-slate-400 font-bold text-xs tracking-[0.1em] uppercase flex items-center gap-2">
+            <p className="text-slate-500 font-semibold text-xs tracking-wide uppercase flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Student Management System • Connection Active
+              Student Management System • Session Verified
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4 bg-white p-2 rounded-3xl border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-4 bg-white p-2 rounded-3xl border border-slate-200 shadow-sm">
           <div className="px-6 py-3 bg-slate-50 rounded-2xl flex items-center gap-4">
-            <MdAccessTime size={20} className="text-indigo-600" />
-            <span className="text-sm font-black text-slate-800 tabular-nums">
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            <MdAccessTime size={20} className="text-blue-700" />
+            <span className="text-sm font-bold text-slate-800 tabular-nums">
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
           <button
             onClick={() => fetchAll(true)}
-            className={`p-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-100 ${refreshing ? 'animate-spin' : ''}`}
+            className={`p-4 bg-blue-700 text-white rounded-2xl hover:bg-blue-800 transition-all active:scale-95 shadow-md ${refreshing ? 'animate-spin' : ''}`}
           >
             <MdAutorenew size={22} />
           </button>
         </div>
       </div>
 
-      {/* 📊 LIVE METRICS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {stats.map((s, i) => (
-          <motion.div
-            whileHover={{ y: -5 }}
-            key={i}
-            onClick={() => navigate(s.path)}
-            className="bg-white/80 backdrop-blur-xl p-6 rounded-[32px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-2xl hover:shadow-indigo-500/5 transition-all group cursor-pointer relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 opacity-0 group-hover:opacity-100 rounded-bl-full transition-opacity" />
-            <div className={`w-12 h-12 rounded-2xl ${s.bg} ${s.color} flex items-center justify-center mb-4 transition-transform group-hover:scale-110 relative z-10 shadow-inner`}>
-              {s.icon}
-            </div>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 relative z-10 opacity-70">{s.label}</p>
-            <div className="flex items-end justify-between relative z-10">
-              <div className="flex items-baseline gap-1.5">
-                <p className="text-3xl font-black text-slate-800 tracking-tight font-display tabular-nums truncate max-w-[150px]">{s.val}</p>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <div className="px-4 sm:px-8 space-y-10">
+        {/* 📊 LIVE METRICS GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((s, i) => (
+            <motion.div
+              whileHover={{ y: -5 }}
+              key={i}
+              onClick={() => navigate(s.path)}
+              className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group cursor-pointer relative overflow-hidden"
+            >
+              <div className={`w-14 h-14 rounded-2xl ${s.bg} ${s.color} flex items-center justify-center mb-6 transition-transform group-hover:scale-110 shadow-sm`}>
+                {s.icon}
               </div>
-              <MdKeyboardArrowRight size={20} className="text-slate-300 group-hover:text-indigo-600 transition-colors" />
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-        {/* 🛠️ LEARNING COMMAND CENTER */}
-        <div className="lg:col-span-2 bg-white/80 backdrop-blur-2xl p-10 rounded-[56px] border border-white shadow-[0_20px_50px_rgba(0,0,0,0.04)] relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] translate-x-20 -translate-y-20 group-hover:scale-110 transition-transform duration-1000" />
-          <div className="absolute -bottom-24 -left-24 w-72 h-72 bg-purple-500/5 rounded-full blur-[80px]" />
-
-          <div className="relative z-10 h-full flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-lg">
-                  <MdPlayArrow size={24} />
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">{s.label}</p>
+              <div className="flex items-end justify-between">
+                <div className="flex items-baseline gap-2">
+                  <p className="text-4xl font-extrabold text-slate-900 tracking-tight tabular-nums">{s.val}</p>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 </div>
-                <h3 className="text-3xl font-black text-slate-800 font-display tracking-tight">Learning Hub</h3>
+                <MdKeyboardArrowRight size={24} className="text-slate-300 group-hover:text-blue-700 transition-colors" />
               </div>
-              <p className="text-slate-400 text-sm font-bold max-w-md leading-relaxed">
-                Access your active course assignments, track progress, and communicate with your teachers.
-              </p>
+            </motion.div>
+          ))}
+        </div>
+
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+          {/* 🛠️ LEARNING COMMAND CENTER */}
+          <div className="lg:col-span-2 bg-white p-10 rounded-[32px] border border-slate-200 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 rounded-bl-full -z-0 opacity-50" />
+            
+            <div className="relative z-10 h-full flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-700 text-white flex items-center justify-center shadow-md">
+                    <MdPlayArrow size={24} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Learning Command Hub</h3>
+                </div>
+                <p className="text-slate-500 font-medium max-w-lg leading-relaxed">
+                  Access your active course assignments, track performance metrics, and download verified academic records.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
+                <button onClick={() => navigate('/tasks')} className="px-6 py-4 bg-blue-700 text-white rounded-xl font-semibold text-xs uppercase tracking-wide shadow-md flex items-center justify-center gap-2 hover:bg-blue-800 transition-all active:scale-95">
+                  <MdAssignment size={20} /> View Tasks
+                </button>
+                <button onClick={() => navigate('/materials')} className="px-6 py-4 bg-white text-slate-900 border border-slate-300 rounded-xl font-semibold text-xs uppercase tracking-wide shadow-sm flex items-center justify-center gap-2 hover:bg-slate-100 transition-all active:scale-95">
+                  <MdBook size={20} /> Materials
+                </button>
+                <button onClick={() => navigate('/report')} className="px-6 py-4 bg-slate-900 text-white rounded-xl font-semibold text-xs uppercase tracking-wide shadow-md flex items-center justify-center gap-2 hover:bg-black transition-all active:scale-95">
+                  <MdBarChart size={20} /> My Report
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 🔔 LIVE INTEL FEED */}
+          <div className="bg-white p-10 rounded-[32px] border border-slate-200 shadow-sm flex flex-col">
+            <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
+              <h3 className="text-xl font-bold text-slate-800 tracking-tight">Latest Intel</h3>
+              <div className="p-2 bg-blue-50 text-blue-700 rounded-lg">
+                <MdNotificationsActive size={20} />
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
-              <button onClick={() => navigate('/tasks')} className="p-6 bg-indigo-600 text-white rounded-[28px] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 active:scale-95">
-                <MdAssignment size={22} /> View Assignments
-              </button>
-              <button onClick={() => navigate('/materials')} className="p-6 bg-white border border-slate-100 text-slate-600 rounded-[28px] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
-                <MdBook size={22} /> View Resources
-              </button>
-              <button onClick={() => navigate('/report')} className="p-6 bg-white border border-slate-100 text-slate-600 rounded-[28px] font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-slate-50 transition-all active:scale-95 shadow-sm">
-                <MdBarChart size={22} /> Analytics
-              </button>
+            <div className="space-y-6 flex-1 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
+              {data.notifications.slice(0, 5).map((n, i) => (
+                <div key={i} className="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all group border border-transparent hover:border-slate-100">
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <MdNotificationsActive size={20} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-slate-700 leading-snug mb-1 line-clamp-2">{n.message}</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                      {new Date(n.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {data.notifications.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">No New Notifications</p>
+                </div>
+              )}
             </div>
+
+            <button onClick={() => navigate('/notifications')} className="w-full py-4 mt-6 bg-slate-50 text-slate-500 rounded-xl font-bold text-[10px] uppercase tracking-wide hover:bg-slate-100 transition-all border border-slate-100">
+              See All Activity
+            </button>
           </div>
         </div>
 
-        {/* 🔔 LIVE INTEL FEED */}
-        <div className="bg-white p-10 rounded-[56px] border border-slate-100 shadow-sm flex flex-col">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-black text-slate-800 font-display tracking-tight">Recent Notifications</h3>
-            <button onClick={() => navigate('/notifications')} className="p-2.5 bg-slate-50 text-indigo-600 rounded-xl hover:bg-indigo-50 transition-all">
-              <MdNotificationsActive size={20} />
+        {/* 🏆 RECENT ACHIEVEMENTS / TASKS */}
+        <div className="bg-white p-10 rounded-[32px] border border-slate-200 shadow-sm">
+          <div className="flex items-center justify-between mb-10 px-4 pb-6 border-b border-slate-100">
+            <div>
+              <h3 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                <MdOutlineEmojiEvents size={28} className="text-blue-700" /> Active Assignments
+              </h3>
+              <p className="text-slate-500 font-semibold text-xs tracking-wide uppercase mt-1">Current deployments awaiting synchronization</p>
+            </div>
+            <button onClick={() => navigate('/tasks')} className="p-3 bg-white border border-slate-300 text-slate-500 rounded-xl hover:bg-slate-50 transition-all">
+              <MdKeyboardArrowRight size={24} />
             </button>
           </div>
 
-          <div className="space-y-6 flex-1 overflow-y-auto max-h-[320px] pr-2 custom-scrollbar">
-            {data.notifications.slice(0, 5).map((n, i) => (
-              <div key={i} className="flex items-start gap-4 p-4 rounded-[28px] hover:bg-slate-50 transition-all group cursor-default border border-transparent hover:border-slate-100">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                  <MdNotificationsActive size={22} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {data.tasks.slice(0, 3).map((task) => (
+              <div key={task._id} onClick={() => navigate('/tasks')} className="bg-slate-50 p-8 rounded-3xl border border-slate-200 hover:border-blue-300 hover:bg-white hover:shadow-md transition-all group cursor-pointer">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white text-slate-400 flex items-center justify-center border border-slate-200 group-hover:text-blue-700 transition-colors shadow-sm">
+                    <MdAssignment size={22} />
+                  </div>
+                  <div className="overflow-hidden">
+                    <h4 className="text-base font-bold text-slate-800 truncate">{task.Title}</h4>
+                    <p className="text-[10px] font-bold text-blue-600 uppercase tracking-wide">{task.course}</p>
+                  </div>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[13px] font-bold text-slate-700 leading-snug mb-1 line-clamp-2">{n.message}</p>
-                  <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
-                    {new Date(n.createdAt).toLocaleDateString()} • {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </p>
+                <div className="flex items-center justify-between pt-6 border-t border-slate-200">
+                  <span className={`text-[10px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-lg ${task.Status === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
+                    {task.Status}
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                    Due {new Date(task.Deadline).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             ))}
-            {data.notifications.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-4">
-                  <MdNotificationsActive size={32} />
-                </div>
-                <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest">No New Intel</p>
+            {data.tasks.length === 0 && (
+              <div className="col-span-full py-16 text-center border-2 border-dashed border-slate-200 rounded-3xl">
+                <p className="text-slate-400 font-bold text-xs uppercase tracking-wide">No active deployments found</p>
               </div>
             )}
           </div>
-
-          <button onClick={() => navigate('/notifications')} className="w-full py-5 mt-6 bg-slate-50 text-slate-400 rounded-[24px] font-black text-[10px] uppercase tracking-widest hover:text-indigo-600 transition-all">
-            View All Notifications
-          </button>
         </div>
       </div>
-
-      {/* 🏆 RECENT ACHIEVEMENTS / TASKS */}
-      <div className="bg-white/40 backdrop-blur-xl p-10 rounded-[56px] border border-white/60 shadow-sm">
-        <div className="flex items-center justify-between mb-10 px-4">
-          <div>
-            <h3 className="text-2xl font-black text-slate-800 font-display tracking-tight flex items-center gap-3">
-              <MdOutlineEmojiEvents size={28} className="text-amber-500" /> Recent Deployments
-            </h3>
-            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">Latest assignments in your sector</p>
-          </div>
-          <Link to="/tasks" className="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:text-indigo-600 transition-all">
-            <MdKeyboardArrowRight size={24} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {data.tasks.slice(0, 3).map((task) => (
-            <div key={task._id} onClick={() => navigate('/tasks')} className="bg-white p-6 rounded-[32px] border border-slate-100 hover:border-indigo-400 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                  <MdAssignment size={20} />
-                </div>
-                <div className="overflow-hidden">
-                  <h4 className="text-sm font-black text-slate-700 truncate">{task.Title}</h4>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{task.course}</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg ${task.Status === 'Completed' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
-                  {task.Status}
-                </span>
-                <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
-                  Due {new Date(task.Deadline).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
-                </span>
-              </div>
-            </div>
-          ))}
-          {data.tasks.length === 0 && (
-            <div className="col-span-full py-10 text-center text-slate-400 font-bold text-xs uppercase tracking-widest border-2 border-dashed border-slate-100 rounded-[32px]">
-              No assignments found
-            </div>
-          )}
-        </div>
-      </div>
-
     </div>
   );
 };

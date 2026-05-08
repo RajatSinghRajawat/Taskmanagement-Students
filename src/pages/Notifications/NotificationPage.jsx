@@ -74,7 +74,7 @@ const NotificationPage = () => {
       case 'Task_Overdue': 
       case 'Missed_Deadline': return { icon: ShieldAlert, color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' };
       case 'Announcement': return { icon: Megaphone, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' };
-      default: return { icon: Bell, color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' };
+      default: return { icon: Bell, color: 'text-blue-700', bg: 'bg-blue-50', border: 'border-blue-100' };
     }
   };
 
@@ -94,26 +94,26 @@ const NotificationPage = () => {
       <Toaster position="top-right" />
 
       {/* Decorative Blobs */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/2 -left-24 w-72 h-72 bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 -left-24 w-72 h-72 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Simplified Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10 max-w-5xl mx-auto">
          <div>
-            <h1 className="text-4xl font-black text-slate-800 tracking-tight font-display mb-1">Notifications</h1>
+            <h1 className="text-4xl font-bold text-slate-800 tracking-tight  mb-1">Notifications</h1>
             <p className="text-slate-400 font-bold text-[10px] tracking-[0.15em] uppercase flex items-center gap-2">
-               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                Live Command Center Feed
             </p>
          </div>
          <div className="flex items-center gap-3">
-            <button onClick={() => fetchNotifications(true)} className={`p-4 bg-white/80 backdrop-blur-md rounded-2xl text-slate-400 hover:text-indigo-600 transition-all border border-slate-100 shadow-sm ${refreshing ? 'animate-spin' : ''}`}>
+            <button onClick={() => fetchNotifications(true)} className={`p-4 bg-white/80 backdrop-blur-md rounded-2xl text-slate-400 hover:text-blue-700 transition-all border border-slate-100 shadow-sm ${refreshing ? 'animate-spin' : ''}`}>
                <RefreshCcw size={22} />
             </button>
             <button 
                onClick={markAllAsRead}
                disabled={notifications.length === 0}
-               className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-slate-100 flex items-center gap-3 hover:bg-indigo-600 transition-all disabled:opacity-50"
+               className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-[11px] uppercase tracking-wide shadow-xl shadow-slate-100 flex items-center gap-3 hover:bg-blue-700 transition-all disabled:opacity-50"
             >
                <CheckCircle2 size={22} /> Mark all as read
             </button>
@@ -132,10 +132,10 @@ const NotificationPage = () => {
                      animate={{ opacity: 1, y: 0 }}
                      exit={{ opacity: 0, scale: 0.95 }}
                      transition={{ delay: idx * 0.03 }}
-                     className={`relative bg-white/80 backdrop-blur-2xl p-8 rounded-[40px] border border-white shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex flex-col md:flex-row items-start md:items-center gap-8 transition-all hover:shadow-xl hover:border-indigo-100 group ${!n.isRead ? 'border-l-[6px] border-l-indigo-600' : ''}`}
+                     className={`relative bg-white/80 backdrop-blur-2xl p-8 rounded-3xl border border-white shadow-[0_4px_20px_rgb(0,0,0,0.01)] flex flex-col md:flex-row items-start md:items-center gap-8 transition-all hover:shadow-xl hover:border-blue-100 group ${!n.isRead ? 'border-l-[6px] border-l-blue-700' : ''}`}
                   >
                      {/* Icon */}
-                     <div className={`w-16 h-16 rounded-[24px] ${bg} ${color} flex items-center justify-center text-3xl shadow-inner border ${border} shrink-0`}>
+                     <div className={`w-16 h-16 rounded-2xl ${bg} ${color} flex items-center justify-center text-3xl shadow-inner border ${border} shrink-0`}>
                         <Icon size={28} />
                      </div>
 
@@ -144,15 +144,15 @@ const NotificationPage = () => {
                         <div className="flex items-start justify-between gap-4">
                            <div>
                               <div className="flex items-center gap-3 mb-1">
-                                 <span className={`px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest ${bg} ${color} border ${border}`}>{n.type?.replace(/_/g, ' ')}</span>
-                                 {!n.isRead && <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(79,70,229,0.5)]"></span>}
+                                 <span className={`px-2.5 py-1 rounded-lg text-[8px] font-bold uppercase tracking-wide ${bg} ${color} border ${border}`}>{n.type?.replace(/_/g, ' ')}</span>
+                                 {!n.isRead && <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(79,70,229,0.5)]"></span>}
                               </div>
-                              <h3 className={`text-lg font-black tracking-tight font-display ${!n.isRead ? 'text-slate-900' : 'text-slate-600'}`}>
+                              <h3 className={`text-lg font-bold tracking-tight  ${!n.isRead ? 'text-slate-900' : 'text-slate-600'}`}>
                                  {n.title}
                               </h3>
                            </div>
                            <div className="text-right shrink-0">
-                              <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2 justify-end">
+                              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 justify-end">
                                  <Clock size={12} /> {new Date(n.createdAt).toLocaleDateString()}
                               </p>
                            </div>
@@ -163,11 +163,11 @@ const NotificationPage = () => {
                         </p>
 
                         <div className="flex items-center gap-4 pt-2">
-                           <button className="text-[9px] font-black uppercase tracking-[0.2em] text-indigo-600 hover:gap-3 transition-all flex items-center gap-1">
+                           <button className="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-700 hover:gap-3 transition-all flex items-center gap-1">
                               View Details <ArrowRight size={12} />
                            </button>
                            <span className="w-1 h-1 rounded-full bg-slate-100"></span>
-                           <button onClick={() => deleteNotification(n._id)} className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-rose-500 transition-colors">
+                           <button onClick={() => deleteNotification(n._id)} className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-300 hover:text-rose-500 transition-colors">
                               Dismiss
                            </button>
                         </div>
@@ -184,7 +184,7 @@ const NotificationPage = () => {
                   <div className="w-20 h-20 bg-slate-50 rounded-[32px] flex items-center justify-center mx-auto mb-6 text-slate-200">
                      <Bell size={40} />
                   </div>
-                  <h3 className="text-2xl font-black text-slate-800 tracking-tight font-display">No Notifications</h3>
+                  <h3 className="text-2xl font-bold text-slate-800 tracking-tight ">No Notifications</h3>
                   <p className="text-slate-400 font-bold text-xs mt-2 tracking-wide uppercase">Your command center feed is currently empty.</p>
                </div>
             )}

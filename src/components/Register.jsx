@@ -59,7 +59,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-6 font-sans overflow-hidden bg-[#F1F5F9] selection:bg-indigo-500/30">
+    <div className="min-h-screen relative flex items-center justify-center p-6 font-sans overflow-hidden bg-[#fafafa] selection:bg-indigo-500/30">
       <Toaster position="top-center" />
       
       {/* 🔮 ELITE BACKGROUND ARCHITECTURE */}
@@ -69,19 +69,20 @@ const Register = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-[1100px] w-full bg-white/60 backdrop-blur-[40px] rounded-[56px] shadow-[0_32px_100px_rgba(0,0,0,0.08)] border border-white overflow-hidden flex flex-col lg:flex-row min-h-[750px] relative z-10"
+        className="max-w-[1100px] w-full bg-white/40 backdrop-blur-[40px] rounded-[56px] shadow-[0_32px_100px_rgba(0,0,0,0.06)] border border-white/60 overflow-hidden flex flex-col lg:flex-row min-h-[750px] relative z-10"
       >
         
         {/* 🚀 BRANDING SIDE (DYNAMICS) */}
         <div className="hidden lg:flex lg:w-[45%] relative flex-col justify-between p-16 overflow-hidden bg-slate-900">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 to-blue-600/30 opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-blue-600/20 opacity-40" />
           <div className="absolute -right-20 -top-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px]" />
           
           <div className="relative z-10">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20 shadow-2xl">
-                 <MdRocketLaunch className="text-white text-3xl" />
+              <div className="flex items-center justify-center p-2">
+                 <img src="/logo.png" alt="Logo" className="h-16 w-auto invert brightness-0" />
               </div>
+              <div className="h-14 w-px bg-white/20"></div>
               <div>
                 <h1 className="font-black text-3xl text-white tracking-tighter uppercase font-display">TIPS G</h1>
                 <p className="text-[10px] uppercase tracking-[0.4em] text-indigo-400 font-black">Student Network</p>
@@ -117,8 +118,15 @@ const Register = () => {
         <div className="flex-1 p-8 lg:p-16 flex flex-col justify-center relative">
           <div className="max-w-md w-full mx-auto">
             
-            <div className="mb-12">
-               <div className="w-2 h-10 bg-slate-900 rounded-full mb-6" />
+            {/* Mobile Logo Visibility */}
+            <div className="lg:hidden flex justify-center mb-10">
+               <div className="p-3 rounded-2xl bg-white shadow-xl border border-slate-100">
+                  <img src="/logo.png" alt="Logo" className="h-14 w-auto" />
+               </div>
+            </div>
+
+            <div className="mb-12 text-center lg:text-left">
+               <div className="hidden lg:block w-2 h-10 bg-slate-900 rounded-full mb-6" />
                <h2 className="text-4xl font-black text-slate-800 tracking-tighter font-display mb-2 uppercase">Create Identity</h2>
                <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.2em]">Student Enrollment Protocol</p>
             </div>

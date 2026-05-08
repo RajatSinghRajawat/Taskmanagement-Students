@@ -73,10 +73,10 @@ const Login = () => {
           
           <div className="relative z-10">
             <div className="flex items-center gap-6">
-              <div className="p-4 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-2xl">
-                 <img src="/logo.png" alt="Logo" className="h-20 w-auto invert brightness-0" />
+              <div className="flex items-center justify-center p-2">
+                 <img src="/logo.png" alt="Logo" className="h-16 w-auto invert brightness-0" />
               </div>
-              <div className="h-16 w-px bg-white/20"></div>
+              <div className="h-14 w-px bg-white/20"></div>
               <div>
                 <h1 className="font-black text-2xl text-white tracking-tighter uppercase font-display leading-none">Scholar</h1>
                 <p className="text-[10px] uppercase tracking-[0.4em] text-indigo-300 font-black mt-1">Intelligence Portal</p>
@@ -112,8 +112,15 @@ const Login = () => {
         <div className="flex-1 p-8 lg:p-20 flex flex-col justify-center relative">
           <div className="max-w-md w-full mx-auto">
             
-            <div className="mb-14">
-               <div className="w-1.5 h-10 bg-indigo-600 rounded-full mb-6" />
+            {/* Mobile Logo Visibility */}
+            <div className="lg:hidden flex justify-center mb-10">
+               <div className="p-3 rounded-2xl bg-white shadow-xl border border-slate-100">
+                  <img src="/logo.png" alt="Logo" className="h-14 w-auto" />
+               </div>
+            </div>
+
+            <div className="mb-14 text-center lg:text-left">
+               <div className="hidden lg:block w-1.5 h-10 bg-indigo-600 rounded-full mb-6" />
                <h2 className="text-4xl font-black text-slate-800 tracking-tighter font-display mb-2">Identify Yourself</h2>
                <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.1em]">Student Synchronization Gateway</p>
             </div>
